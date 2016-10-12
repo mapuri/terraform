@@ -9,6 +9,15 @@ GOVERSION="1.7"
 SRCROOT="/opt/go"
 SRCPATH="/opt/gopath"
 
+# Setup env
+cat <<EOF >/tmp/env.sh
+export http_proxy=#{ENV["http_proxy"]}
+export https_proxy=#{ENV["https_proxy"]}
+export HTTP_PROXY=#{ENV["HTTP_PROXY"]}
+export HTTPS_PROXY=#{ENV["HTTPS_PROXY"]}
+EOF
+source /tmp/env.sh
+
 # Get the ARCH
 ARCH=`uname -m | sed 's|i686|386|' | sed 's|x86_64|amd64|'`
 
@@ -44,6 +53,8 @@ cd /opt/gopath/src/github.com/hashicorp/terraform
 EOF
 sudo mv /tmp/gopath.sh /etc/profile.d/gopath.sh
 sudo chmod 0755 /etc/profile.d/gopath.sh
+sudo mv /tmp/env.sh /etc/profile.d/env.sh
+sudo chmod 0755 /etc/profile.d/env.sh
 SCRIPT
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
